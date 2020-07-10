@@ -49,7 +49,7 @@ public class MyBloomFilter {
     /**
      * 判断是否存在值
      */
-    public boolean get(Object value){
+    public boolean contains(Object value){
         boolean ret = true;
         for (SimpleHash func : funcs) {
             ret = ret&&bits.get(func.hash(value));
