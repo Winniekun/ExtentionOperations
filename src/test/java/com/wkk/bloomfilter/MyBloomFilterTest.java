@@ -4,7 +4,6 @@ package com.wkk.bloomfilter;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 import com.wkk.utils.BloomFilterUtil;
-import edu.princeton.cs.algs4.BinaryIn;
 import org.junit.Test;
 
 import java.util.List;
