@@ -7,4 +7,15 @@ package com.wkk.singleton;
  */
 public enum  EnumSingleton {
     SINGLETON;
+    private Resource instance;
+    EnumSingleton() {
+        instance = new Resource();
+    }
+    public Resource getInstance() {
+        return instance;
+    }
+}
+
+class Resource{
+
 }
