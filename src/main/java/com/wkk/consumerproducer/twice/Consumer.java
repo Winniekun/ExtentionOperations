@@ -6,5 +6,5 @@ package com.wkk.consumerproducer.twice;
  * @since 2021/4/24
  */
 public interface Consumer {
-    void consumer();
+    void consumer() throws InterruptedException;
 }

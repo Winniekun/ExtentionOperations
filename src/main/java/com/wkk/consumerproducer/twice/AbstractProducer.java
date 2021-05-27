@@ -18,7 +18,7 @@ public abstract class AbstractProducer implements Runnable, Producer{
     }
 
     @Override
-    public void producer() {
+    public void producer() throws InterruptedException{
         throw new UnsupportedOperationException();
     }
 }

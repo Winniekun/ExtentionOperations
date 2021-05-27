@@ -18,7 +18,7 @@ public abstract class AbstractConsumer implements Consumer, Runnable{
     }
 
     @Override
-    public void consumer() {
+    public void consumer() throws InterruptedException{
         throw new UnsupportedOperationException();
     }
 }
