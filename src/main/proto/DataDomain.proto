@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.wkk.grpc.demo";
+
+package kwk;
+
+import "google/protobuf/wrappers.proto";
+
+service BotAPI {
+    rpc Query (QueryRequest) returns (QueryResponse) {}
+}
+
+message QueryRequest {
+    google.protobuf.StringValue query = 1;
+    google.protobuf.StringValue userId = 2;
+    google.protobuf.BoolValue gossipOpened = 3;
+    repeated google.protobuf.StringValue tags = 4;
+    google.protobuf.StringValue channel = 5;
+}
+
+message QueryResponse {
+    google.protobuf.StringValue knowledgeId = 1;
+    google.protobuf.StringValue knowledgeStdQuestion = 2;
+    google.protobuf.StringValue intentName = 3;
+    google.protobuf.StringValue answerType = 4;
+    google.protobuf.StringValue answerContent = 5;
+    // 关联问题列表
+    repeated RelatedKnowledge relatedKnowledges = 6;
+}
+
+message RelatedKnowledge {
+    google.protobuf.StringValue knowledgeId = 1;
+    google.protobuf.StringValue knowledgeStdQuestion = 2;
+}
