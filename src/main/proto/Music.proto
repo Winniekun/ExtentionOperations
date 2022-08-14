@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.wkk.rpc.demo";
+option java_outer_classname = "Music";
+
+service MusicService {
+  rpc ListSongs (SingerId) returns (SongList) {}
+
+  rpc GetSongs (SingerId) returns (stream Song) {}
+}
+
+message SingerId {
+  int32 id = 1;
+}
+
+message Singer {
+  int32 id = 1;
+  string name = 2;
+}
+
+message Song {
+  int32 id = 1;
+  string name = 2;
+  Singer singer = 3;
+}
+
+message SongList {
+  repeated Song songs = 1;
+}
