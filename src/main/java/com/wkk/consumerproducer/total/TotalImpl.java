@@ -1,6 +1,5 @@
 package com.wkk.consumerproducer.total;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import com.wkk.consumerproducer.Task;
 
 import java.util.concurrent.ArrayBlockingQueue;

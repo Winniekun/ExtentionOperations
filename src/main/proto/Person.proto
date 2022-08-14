@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// 是否生成多个文件
+option java_multiple_files = true;
+// java package
+option java_package = "com.wkk.grpc";
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+message HelloRequest {
+  string  name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}

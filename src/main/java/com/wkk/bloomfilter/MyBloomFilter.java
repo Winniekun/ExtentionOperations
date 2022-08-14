@@ -11,7 +11,7 @@ public class MyBloomFilter {
     /**
      * 位数组的大小
      */
-    private static final int DEFAULT_SIZE = 1<<25;
+    private static final int DEFAULT_SIZE = 1 << 25;
 
     /**
      * 位数组
@@ -31,7 +31,7 @@ public class MyBloomFilter {
     /**
      * 初始化的时候, 会初始化包含多个hash函数的数组funcs
      */
-    public MyBloomFilter(){
+    public MyBloomFilter() {
         for (int i = 0; i < SEEDS.length; i++) {
             funcs[i] = new SimpleHash(DEFAULT_SIZE, SEEDS[i]);
         }
@@ -40,7 +40,7 @@ public class MyBloomFilter {
     /**
      * 添加元素到bloomfilter中
      */
-    public void add(Object value){
+    public void add(Object value) {
         for (SimpleHash func : funcs) {
             bits.set(func.hash(value), true);
         }
@@ -49,10 +49,10 @@ public class MyBloomFilter {
     /**
      * 判断是否存在值
      */
-    public boolean contains(Object value){
+    public boolean contains(Object value) {
         boolean ret = true;
         for (SimpleHash func : funcs) {
-            ret = ret&&bits.get(func.hash(value));
+            ret = ret && bits.get(func.hash(value));
         }
         return ret;
     }
@@ -60,7 +60,7 @@ public class MyBloomFilter {
     /**
      * 静态内部类 用于hash操作
      */
-    private static class SimpleHash{
+    private static class SimpleHash {
         /**
          * 位数组的容量
          */
@@ -75,9 +75,9 @@ public class MyBloomFilter {
             this.seed = seed;
         }
 
-        public int hash(Object value){
+        public int hash(Object value) {
             int h;
-            return (value==null) ? 0 : Math.abs(seed *(capacity-1) & ((h = value.hashCode()) ^ (h>>>16)));
+            return (value == null) ? 0 : Math.abs(seed * (capacity - 1) & ((h = value.hashCode()) ^ (h >>> 16)));
         }
     }
 
