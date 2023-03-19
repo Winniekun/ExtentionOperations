@@ -5,18 +5,13 @@ import com.wkk.java8.stream.entiy.Dish;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.wkk.java8.stream.entiy.Dish.menu;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.partitioningBy;
-import static java.util.stream.Collectors.reducing;
+import static java.util.stream.Collectors.*;
 
 /**
  * TODO 类描述
@@ -32,7 +27,7 @@ public class JavaStream {
      */
     @Test
     public void testFlat() {
-        ArrayList<String> words = Lists.newArrayList("Hello", "World");
+        List<String> words = Lists.newArrayList("Hello", "World");
         List<String[]> collect = words.stream().map(word -> word.split("")).collect(Collectors.toList());
         for (String[] strings : collect) {
             Arrays.stream(strings).forEach(System.out::println);
@@ -107,4 +102,53 @@ public class JavaStream {
         log.info("dishesByType: {}", dishesByType);
     }
 
+    @Test
+    public void testStreamI() {
+        Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5, 6);
+        Stream<Integer> stream2 = Stream.iterate(0, (x) -> x + 3).limit(4);
+        stream2.forEach(System.out::println);
+
+        System.out.println("####################");
+        Stream<Double> stream3 = Stream.generate(Math::random).limit(3);
+        stream3.forEach(System.out::println);
+    }
+
+    @Test
+    public void testTryAdvance() {
+        List<Integer> list = Lists.newArrayList();
+        list.add(2);
+        list.add(1);
+        list.add(3);
+        Spliterator<Integer> spliterator = list.stream().spliterator();
+        AtomicInteger round = new AtomicInteger(1);
+        AtomicInteger loop = new AtomicInteger(1);
+        while (spliterator.tryAdvance(num -> System.out.printf("第%d轮回调Action,值:%d\n", round.getAndIncrement(), num))) {
+            System.out.printf("第%d轮循环\n", loop.getAndIncrement());
+        }
+    }
+
+    @Test
+    public void testForEachRemaining() {
+        List<Integer> list = Lists.newArrayList();
+        list.add(2);
+        list.add(1);
+        list.add(3);
+        Spliterator<Integer> spliterator = list.stream().spliterator();
+        AtomicInteger round = new AtomicInteger(1);
+        spliterator.forEachRemaining(num -> System.out.printf("第%d轮回调Action,值:%d\n", round.getAndIncrement(), num));
+    }
+
+    @Test
+    public void testTrySplit() {
+        List<Integer> list = Lists.newArrayList();
+        list.add(2);
+        list.add(1);
+        list.add(3);
+        list.add(4);
+        Spliterator<Integer> spliterator = list.stream().spliterator();
+        final AtomicInteger round = new AtomicInteger(1);
+        spliterator.forEachRemaining(num -> System.out.printf("[第一次遍历forEachRemaining]第%d轮回调Action,值:%d\n", round.getAndIncrement(), num));
+        round.set(1);
+        spliterator.forEachRemaining(num -> System.out.printf("[第二次遍历forEachRemaining]第%d轮回调Action,值:%d\n", round.getAndIncrement(), num));
+    }
 }
