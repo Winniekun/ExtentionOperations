@@ -2,9 +2,12 @@ package com.wkk.java8.stream;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.wkk.java8.stream.entiy.Student;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -174,14 +177,20 @@ public class StreamTest {
 
     @Test
     public void testCollector() {
-        List<String> list = Lists.newArrayList("I", "am", "a", "programmer");
-        List<String> rest = Lists.newArrayList("I", "have", "a", "cat");
-        Map<String, Boolean> map = list.stream().collect(Collectors.toMap(Function.identity(), ele -> contains(ele, rest)));
-        System.out.println(map);
+        Stream<Integer> headStream = Stream.of(1,1,1,2,1,3,2,4);
+//        Stream<Integer> st = headStream.filter(ele -> ele == 1)
+//                .distinct()
+//                .sorted();
+        //等同于
+        Stream<Integer> afterFilter = headStream.filter(e -> e == 2); // ①
+        Stream<Integer> afterDistinct = afterFilter.distinct();       // ②
+        Stream<Integer> afterSort = afterDistinct.sorted();             // ③
+        List<Integer> collect = afterSort.collect(Collectors.toList());
+
     }
 
     private boolean contains(String ele, List<String> rest) {
-        return rest.contains(ele) ? true : false;
+        return rest.contains(ele);
     }
 
     @Test
@@ -198,7 +207,7 @@ public class StreamTest {
 
 //        Map<String, List<Employee>> employeeMap = employeeList.stream().collect(Collectors.groupingBy(Employee::getDepartment));
         Map<String, List<String>> employeeMap = employeeList.stream().collect(Collectors.groupingBy(Employee::getDepartment,
-                Collectors.mapping(Employee::getName,  Collectors.toList())));
+                Collectors.mapping(Employee::getName, Collectors.toList())));
     }
 
     @Test
@@ -227,7 +236,89 @@ public class StreamTest {
 
     @Test
     public void testDemo() {
+        List<Student> students = generateStudent();
+        // 统计b班所有同学的爱好情况
+        Map<String, Long> hobbyMap = students.stream()
+                .filter(student -> Objects.equals(student.getClazz(), "b"))
+                .flatMap(student -> student.getHobbies().stream())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        System.out.println(hobbyMap);
 
+        hobbyMap = Maps.newHashMapWithExpectedSize(16);
+        for (Student student : students) {
+            if (!"b".equals(student.getClazz())) {
+                continue;
+            }
+            List<String> hobbies = student.getHobbies();
+            for (String hobby : hobbies) {
+                hobbyMap.put(hobby, hobbyMap.getOrDefault(hobby, 0L) + 1);
+            }
+        }
+        System.out.println(hobbyMap);
+
+    }
+
+    public static List<Student> generateStudent() {
+        Student first = Student.builder()
+                .clazz("a")
+                .name("fist")
+                .hobbies(Lists.newArrayList("basketball", "table tennis", "football"))
+                .build();
+        Student second = Student.builder()
+                .clazz("b")
+                .name("bFirst")
+                .hobbies(Lists.newArrayList("basketball", "table tennis", "football"))
+                .build();
+        Student third = Student.builder()
+                .clazz("b")
+                .name("bSecond")
+                .hobbies(Lists.newArrayList("basketball", "badminton", "football"))
+                .build();
+        Student fourth = Student.builder()
+                .clazz("b")
+                .name("bThird")
+                .hobbies(Lists.newArrayList("basketball", "tennis", "table tennis"))
+                .build();
+        Student fifth = Student.builder()
+                .clazz("b")
+                .name("bFourth")
+                .hobbies(Lists.newArrayList("basketball", "tennis", "football"))
+                .build();
+        return Lists.newArrayList(first, second, third, fourth, fifth);
+    }
+
+    @Test
+    public void testStreamStart() {
+        Stream.of("1","2","3").sorted();
+    }
+
+    @Test
+    public void testCounting() {
+        List<Student> students = buildStudents();
+        System.out.println(students.stream().collect(Collectors.counting()));
+    }
+
+    @Test
+    public void testAverage() {
+        List<Student> students = buildStudents();
+        System.out.println(students.stream().collect(Collectors.averagingDouble(Student::getScore)));
+    }
+
+    @Test
+    public void testSumming() {
+        List<Student> students = buildStudents();
+        System.out.println(students.stream().collect(Collectors.summarizingDouble(Student::getScore)));
+        // 求和求平均值
+        System.out.println(students.stream().collect(Collectors.summarizingDouble(Student::getScore)));
+
+    }
+
+    public static List<Student> buildStudents() {
+        final List<Student> students = Lists.newArrayList();
+        students.add(new Student("1", "张三", LocalDate.of(2009, Month.JANUARY, 1), 12, 12.123));
+        students.add(new Student("2", "李四", LocalDate.of(2010, Month.FEBRUARY, 2), 11, 22.123));
+        students.add(new Student("3", "王五", LocalDate.of(2011, Month.MARCH, 3), 10, 32.123));
+        return students;
     }
 
     public int minimumOperations(int[] nums) {

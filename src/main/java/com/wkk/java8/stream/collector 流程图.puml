@@ -1,0 +1,15 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+ReferencePipeline.evaluate -> TerminalOp.evaluateSequential
+TerminalOp.evaluateSequential -> PipelineHelper.wrapAndCopyInto
+PipelineHelper.wrapAndCopyInto -> PipelineHelper.wrapAndCopyInto: wrapSink()方法：\n从后向前，包装所有的 stage 阶段\n形成一条 sink 链表
+
+PipelineHelper.wrapAndCopyInto -> PipelineHelper.wrapAndCopyInto: copyInto()方法：\n 1. 调用第一个 sink 的 begin()方法\n 2.执行数据源的 spliterator.forEachRemaining(wrappendSink)方法遍历调用 accept()方法 \n 3.end() 通知结束
+
+
+
+
+
+@enduml
